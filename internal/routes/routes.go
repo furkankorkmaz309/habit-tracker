@@ -15,6 +15,8 @@ func Routes(app *app.App) http.Handler {
 		r.Post("/", handlers.AddHabit(*app))
 		r.Get("/", handlers.GetHabits(*app))
 		r.Get("/{id}", handlers.GetHabit(*app))
+		r.Delete("/{id}", handlers.DeleteHabit(*app))
+		r.Patch("/{id}", handlers.PatchHabit(*app))
 	})
 
 	return r
