@@ -26,6 +26,18 @@ func InitDB() (*sql.DB, error) {
 	}
 
 	// create users table
+	queryUsers := `
+	CREATE TABLE IF NOT EXISTS users(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	username TEXT NOT NULL UNIQUE,
+	password TEXT NOT NULL,
+	created_at TIMESTAMP NOT NULL
+	)`
+
+	_, err = db.Exec(queryUsers)
+	if err != nil {
+		return nil, fmt.Errorf("an error occurred while creating users table : %v", err)
+	}
 
 	// create habits table
 	queryHabits := `

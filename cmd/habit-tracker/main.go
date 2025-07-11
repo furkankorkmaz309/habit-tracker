@@ -9,6 +9,7 @@ import (
 	"github.com/furkankorkmaz309/habit-tracker/internal/app"
 	"github.com/furkankorkmaz309/habit-tracker/internal/db"
 	"github.com/furkankorkmaz309/habit-tracker/internal/routes"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -23,6 +24,11 @@ func main() {
 		errorLog.Fatal(err)
 	}
 	defer db.Close()
+
+	err = godotenv.Load("../../.env")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 
 	app := &app.App{
 		DB:       db,

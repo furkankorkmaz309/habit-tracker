@@ -13,7 +13,7 @@ type Response struct {
 	Token   string      `json:"token,omitempty"`
 }
 
-func responseSuccess(w http.ResponseWriter, T any, msg string, statusCode int) error {
+func ResponseSuccess(w http.ResponseWriter, T any, msg string, statusCode int) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
