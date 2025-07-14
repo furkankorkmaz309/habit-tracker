@@ -21,6 +21,7 @@ func Routes(app *app.App) http.Handler {
 	})
 
 	r.Post("/signup", users.Signup(*app))
+	r.Post("/login", users.Login(*app))
 
 	return r
 }
