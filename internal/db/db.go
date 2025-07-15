@@ -10,12 +10,17 @@ import (
 
 func InitDB() (*sql.DB, error) {
 	//create and connect database
-	err := os.MkdirAll("../../internal/data", 0755)
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		return nil, fmt.Errorf("DB_PATH env variable not set")
+	}
+
+	err := os.MkdirAll(dbPath, 0755)
 	if err != nil {
 		return nil, fmt.Errorf("an error occurred while creating folder : %v", err)
 	}
 
-	db, err := sql.Open("sqlite3", "../../internal/data/data.db")
+	db, err := sql.Open("sqlite3", dbPath+"data.db")
 	if err != nil {
 		return nil, fmt.Errorf("an error occurred while creating database : %v", err)
 	}

@@ -24,8 +24,9 @@ func PatchHabit(app app.App) http.HandlerFunc {
 
 		// take row from database with id
 		var habit models.Habit
-		query := `SELECT id, title, description, frequency, created_at FROM habits WHERE id = ?`
-		row := app.DB.QueryRow(query, id)
+		habit.UserID = r.Context().Value("userId").(int)
+		query := `SELECT id, title, description, frequency, created_at FROM habits WHERE id = ? AND user_id = ?`
+		row := app.DB.QueryRow(query, id, habit.UserID)
 		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt)
 		if err != nil {
 			app.ErrorLog.Printf("There is no row : %v", err)

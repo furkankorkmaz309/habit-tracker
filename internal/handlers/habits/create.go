@@ -3,6 +3,7 @@ package habits
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/furkankorkmaz309/habit-tracker/internal/app"
 	"github.com/furkankorkmaz309/habit-tracker/internal/handlers"
@@ -29,8 +30,10 @@ func AddHabit(app app.App) http.HandlerFunc {
 		}
 
 		// add habit to database
-		query := `INSERT INTO habits (title, description, frequency) VALUES (?, ?, ?)`
-		result, err := app.DB.Exec(query, habit.Title, habit.Description, fq)
+		habit.CreatedAt = time.Now()
+		habit.UserID = r.Context().Value("userId").(int)
+		query := `INSERT INTO habits (title, description, frequency, created_at, user_id) VALUES (?, ?, ?, ?, ?)`
+		result, err := app.DB.Exec(query, habit.Title, habit.Description, fq, habit.CreatedAt, habit.UserID)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while inserting habit to database : %v", err)
 			http.Error(w, "DB insert error", http.StatusInternalServerError)

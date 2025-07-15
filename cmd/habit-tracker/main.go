@@ -19,16 +19,16 @@ func main() {
 	port := flag.String("http port", ":8080", "new http port")
 	flag.Parse()
 
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	db, err := db.InitDB()
 	if err != nil {
 		errorLog.Fatal(err)
 	}
 	defer db.Close()
-
-	err = godotenv.Load("../../.env")
-	if err != nil {
-		errorLog.Fatal(err)
-	}
 
 	app := &app.App{
 		DB:       db,

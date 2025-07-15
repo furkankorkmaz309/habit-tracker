@@ -20,8 +20,9 @@ func DeleteHabit(app app.App) http.HandlerFunc {
 		}
 
 		// delete from database
-		query := `DELETE FROM habits WHERE id = ?`
-		result, err := app.DB.Exec(query, id)
+		userID := r.Context().Value("userId").(int)
+		query := `DELETE FROM habits WHERE id = ? AND user_id = ?`
+		result, err := app.DB.Exec(query, id, userID)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while deleting habit : %v", err)
 			http.Error(w, "Delete error", http.StatusInternalServerError)
