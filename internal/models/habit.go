@@ -3,10 +3,10 @@ package models
 import "time"
 
 type Habit struct {
-	ID          int
-	Title       string
-	Description string
-	Frequency   string
-	CreatedAt   time.Time
-	UserID      int
+	ID          int       `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Frequency   string    `json:"frequency"`
+	CreatedAt   time.Time `json:"created_at"`
+	UserID      int       `json:"user_id"`
 }

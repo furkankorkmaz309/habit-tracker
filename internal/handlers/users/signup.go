@@ -71,27 +71,34 @@ func Signup(app app.App) http.HandlerFunc {
 			passwordValidationErrors = append(passwordValidationErrors, passwordMinLen)
 		}
 
-		if len(usernameValidationErrors) > 0 && len(passwordValidationErrors) > 0 {
-			errStrUser := fmt.Sprint("Username is invalid\n" + strings.Join(usernameValidationErrors, "\n"))
-			errStrPassword := fmt.Sprint("Password is invalid\n" + strings.Join(passwordValidationErrors, "\n"))
-
-			app.ErrorLog.Println(errStrUser)
-			app.ErrorLog.Println(errStrPassword)
-
-			http.Error(w, errStrUser+"\n"+errStrPassword, http.StatusBadRequest)
-			return
+		var email models.Email
+		email.Email = user.Email
+		var emailValidationErrors string
+		err = validator.New().Struct(email)
+		if err != nil {
+			emailValidationErrors = "- Must contain at least one number"
 		}
 
+		var isErrorOccurred bool
 		if len(usernameValidationErrors) > 0 {
 			errStrUser := fmt.Sprint("Username is invalid\n" + strings.Join(usernameValidationErrors, "\n"))
 			app.ErrorLog.Println(errStrUser)
 			http.Error(w, errStrUser, http.StatusBadRequest)
-			return
+			isErrorOccurred = true
 		}
 		if len(passwordValidationErrors) > 0 {
 			errStrPassword := fmt.Sprint("Password is invalid\n" + strings.Join(passwordValidationErrors, "\n"))
 			app.ErrorLog.Println(errStrPassword)
 			http.Error(w, errStrPassword, http.StatusBadRequest)
+			isErrorOccurred = true
+		}
+		if len(emailValidationErrors) > 0 {
+			errStrEmail := fmt.Sprint("Email is invalid\n" + strings.Join(passwordValidationErrors, "\n"))
+			app.ErrorLog.Println(errStrEmail)
+			http.Error(w, errStrEmail, http.StatusBadRequest)
+			isErrorOccurred = true
+		}
+		if isErrorOccurred {
 			return
 		}
 
@@ -141,8 +148,8 @@ func Signup(app app.App) http.HandlerFunc {
 		user.CreatedAt = time.Now()
 
 		// add to database
-		query := `INSERT INTO users (username, password, created_at) VALUES (?,?,?)`
-		result, err := app.DB.Exec(query, user.Username, user.Password, user.CreatedAt)
+		query := `INSERT INTO users (username, email, password, created_at) VALUES (?,?,?,?)`
+		result, err := app.DB.Exec(query, user.Username, user.Email, user.Password, user.CreatedAt)
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while inserting user to database : %v", err)
 			http.Error(w, errStr, http.StatusInternalServerError)

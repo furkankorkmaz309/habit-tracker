@@ -29,10 +29,11 @@ func Login(app app.App) http.HandlerFunc {
 		// check is data exists username and if user exists take passwordv
 		var count int
 		var id int
+		var email string
 		var password string
 		var createdAt time.Time
-		queryUserCheck := `SELECT COUNT(*), id, password, created_at FROM users WHERE username = ?`
-		err = app.DB.QueryRow(queryUserCheck, user.Username).Scan(&count, &id, &password, &createdAt)
+		queryUserCheck := `SELECT COUNT(*), id, email, password, created_at FROM users WHERE username = ?`
+		err = app.DB.QueryRow(queryUserCheck, user.Username).Scan(&count, &id, &email, &password, &createdAt)
 		if count == 0 {
 			errStr := fmt.Sprintf("there is no user with username : %v", user.Username)
 			http.Error(w, errStr, http.StatusInternalServerError)
@@ -56,6 +57,7 @@ func Login(app app.App) http.HandlerFunc {
 		}
 		user.ID = id
 		user.CreatedAt = createdAt
+		user.Email = email
 
 		// jwt
 		key := os.Getenv("SECRET_KEY")

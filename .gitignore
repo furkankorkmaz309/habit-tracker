@@ -1,3 +1,38 @@
-./internal/data
-.db
-.env
+# Go build artifacts
+/bin/
+/build/
+/dist/
+*.exe
+*.out
+*.test
+
+# Go module stuff
+vendor/
+go.sum
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.swp
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# SQLite or other local DBs
+*.db
+*.sqlite
+*.sqlite3
+
+# Frontend build artifacts (eğer gelecekte JS bundler vs kullanırsan)
+node_modules/
+*.env
+.env*
+
+# Static file cache
+*.cache
+
+.internal/data
