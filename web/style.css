@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap');
+
+
+h1 {
+    padding: 20px;
+    text-shadow: 3px 3px hsl(192, 20%, 80%);
+}
+
+.left-side{
+    height: 100vh;
+    width: 30vw;
+    min-width: 450px;
+    min-height: 1000px;
+
+    font-size: 1.5rem;
+    text-align: center;
+    color: hsl(192, 20%, 40%);
+    background-color: hsl(193, 40%, 95%);
+    
+    font-family: "Special Gothic Expanded One";
+
+    border-radius: 0px 10px 10px 0px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.main-button{
+    background-color: hsl(192, 20%, 40%);
+
+    height: 6vh;
+    width: 16vw;
+    min-width: 125px;
+    max-width: 200px;
+    margin-top: 20px;
+
+    border: 0px solid hsl(0, 0%, 0%);
+    border-radius: 25px;
+    color: white;
+    
+    text-shadow: 2px 2px hsl(192, 20%, 25%);
+    box-shadow: 3px 4px hsl(192, 20%, 80%);
+    
+    font-size: 1.3rem;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.main-button:hover{
+    background-color: hsl(192, 20%, 30%);
+}
+.main-button:active{
+    background-color: hsl(192, 20%, 45%);
+}
+
+body{
+    margin: 0;
+    background: url(/web/photos/pexels-tara-winstead-8850709.jpg);
+    background-size: cover;
+    background-position: right;
+    overflow: hidden;
+}
+
+.main-div{
+    height: 100vh;
+    width: max(40%, 600px);
+}
+
+.user-pass {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    gap: 10px 10px 0px 10px;
+}
+
+form svg{
+    width: 30px;
+    height: 30px;
+
+    fill: hsl(192, 20%, 70%);
+}
+
+.pht{
+    width: 50px;
+    height: 50px;
+
+    border: 3px solid  hsl(192, 20%, 50%);
+    background-color: hsl(192, 20%, 40%);
+
+    border-radius: 10px 0px 0px 10px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+form input {
+    width: 250px;
+    height: 50px;
+    background-color: hsl(0, 0%, 100%);
+
+    border: 2px solid  hsl(192, 20%, 50%);
+    border-left: none;
+    border-radius: 0px 10px 10px 0px;
+
+    box-sizing: content-box;
+    padding-left: 10px;
+    
+    font-size: medium;
+    font-weight: bold;
+
+    background-color: hsl(192, 20%, 95%);
+}
+
+form input:hover{
+    background-color: hsl(192, 20%, 90%);
+}
+
+
+.change-sit{
+    margin-top: 60px;
+    font-weight: normal;
+    font-size: medium;
+}
+
+.change-sit-button{
+    background-color: hsl(192, 20%, 40%);
+
+    height: 4vh;
+    width: 5vw;
+    min-width: 125px;
+
+    border: 0px solid hsl(0, 0%, 0%);
+    border-radius: 25px;
+    color: white;
+
+    text-shadow: 2px 2px hsl(192, 20%, 25%);
+    box-shadow: 3px 4px hsl(192, 20%, 80%);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    
+    font-size: 1.3rem;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.change-sit-button:hover{
+    background-color: hsl(192, 20%, 30%);
+}
+.change-sit-button:active{
+    background-color: hsl(192, 20%, 45%);
+}
+
+.home-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    width: 50px;
+    height: 50px;
+
+    border-radius: 12px;
+    background-color: hsl(192, 20%, 90%); /* Hafif zemin */
+    border: 3px solid hsl(192, 20%, 50%);  /* Dış çizgi */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.home-button:hover {
+    background-color: hsl(192, 20%, 70%);
+    border-color: hsl(192, 20%, 40%);
+}
+
+.home-button svg path {
+    fill: hsl(192, 20%, 30%);
+    transition: fill 0.2s ease;
+}
+
+.home-button:hover svg path {
+    fill: hsl(0, 0%, 100%);
+}
+.github-button{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    fill: hsl(192, 20%, 50%);
+
+    cursor: pointer;
+}
+
+.github-button:hover{
+    fill: hsl(192, 20%, 30%);
+}
+
+.linkedin-button{
+    position: absolute;
+    bottom: 10px;
+    left: 70px;
+
+    width: 65px;
+    height: 65px;
+    fill: hsl(192, 20%, 50%);
+
+    cursor: pointer;
+}
+
+.linkedin-button:hover{
+    fill: hsl(192, 20%, 30%);
+}
