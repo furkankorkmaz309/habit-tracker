@@ -25,7 +25,7 @@ func Logout(app app.App) http.HandlerFunc {
 		err := handlers.ResponseSuccess(w, "", "User logged out successfully!", http.StatusOK)
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while encoding json : %v", err)
-			http.Error(w, errStr, http.StatusInternalServerError)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
 			app.ErrorLog.Println(errStr)
 			return
 		}

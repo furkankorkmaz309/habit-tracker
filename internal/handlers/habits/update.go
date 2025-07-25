@@ -18,7 +18,7 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while taking id from url : %v", err)
-			http.Error(w, "Taking ID error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Taking ID error", http.StatusInternalServerError)
 			return
 		}
 
@@ -30,7 +30,7 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt)
 		if err != nil {
 			app.ErrorLog.Printf("There is no row : %v", err)
-			http.Error(w, "There is no row", http.StatusInternalServerError)
+			handlers.ResponseError(w, "There is no row", http.StatusInternalServerError)
 			return
 		}
 
@@ -39,7 +39,7 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		err = json.NewDecoder(r.Body).Decode(&habitInput)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while decoding input : %v", err)
-			http.Error(w, "Decode error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Decode error", http.StatusInternalServerError)
 			return
 		}
 
@@ -54,14 +54,14 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		fq, err := strconv.Atoi(habit.Frequency)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while converting string to integer : %v", err)
-			http.Error(w, "Conversion error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Conversion error", http.StatusInternalServerError)
 			return
 		}
 		if habitInput.Frequency != "" {
 			fq, err = handlers.FrequencyConvert(habitInput.Frequency)
 			if err != nil {
 				app.ErrorLog.Printf("an error occurred while converting frequency : %v", err)
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				handlers.ResponseError(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 		}
@@ -71,7 +71,7 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		_, err = app.DB.Exec(queryUpdate, habit.Title, habit.Description, fq, id)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while updating habit : %v", err)
-			http.Error(w, "Update error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Update error", http.StatusInternalServerError)
 			return
 		}
 
@@ -79,7 +79,7 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		err = handlers.ResponseSuccess(w, habit, "Habit updated successfully!", http.StatusOK)
 		if err != nil {
 			app.ErrorLog.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			handlers.ResponseError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 

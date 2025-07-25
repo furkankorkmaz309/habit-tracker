@@ -21,7 +21,7 @@ func Login(app app.App) http.HandlerFunc {
 		err := json.NewDecoder(r.Body).Decode(&user)
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while decoding json : %v", err)
-			http.Error(w, errStr, http.StatusBadRequest)
+			handlers.ResponseError(w, errStr, http.StatusBadRequest)
 			app.ErrorLog.Println(errStr)
 			return
 		}
@@ -36,13 +36,13 @@ func Login(app app.App) http.HandlerFunc {
 		err = app.DB.QueryRow(queryUserCheck, user.Username).Scan(&count, &id, &email, &password, &createdAt)
 		if count == 0 {
 			errStr := fmt.Sprintf("there is no user with username : %v", user.Username)
-			http.Error(w, errStr, http.StatusInternalServerError)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
 			app.ErrorLog.Println(errStr)
 			return
 		}
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while checking is user available : %v", err)
-			http.Error(w, errStr, http.StatusInternalServerError)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
 			app.ErrorLog.Println(errStr)
 			return
 		}
@@ -51,7 +51,7 @@ func Login(app app.App) http.HandlerFunc {
 		err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
 		if err != nil {
 			errStr := "wrong username or password"
-			http.Error(w, errStr, http.StatusInternalServerError)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
 			app.ErrorLog.Println(errStr)
 			return
 		}
@@ -63,7 +63,7 @@ func Login(app app.App) http.HandlerFunc {
 		key := os.Getenv("SECRET_KEY")
 		if key == "" {
 			app.ErrorLog.Printf("there is no SECRET_KEY in .env file")
-			http.Error(w, ".env error", http.StatusInternalServerError)
+			handlers.ResponseError(w, ".env error", http.StatusInternalServerError)
 			return
 		}
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -76,7 +76,7 @@ func Login(app app.App) http.HandlerFunc {
 		signedString, err := token.SignedString([]byte(key))
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while signing string : %v", err)
-			http.Error(w, "Could not authanticate user", http.StatusUnauthorized)
+			handlers.ResponseError(w, "Could not authanticate user", http.StatusUnauthorized)
 			return
 		}
 
@@ -94,7 +94,7 @@ func Login(app app.App) http.HandlerFunc {
 		err = handlers.ResponseSuccess(w, user, "User authenticated successfully!", http.StatusOK)
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while encoding json : %v", err)
-			http.Error(w, errStr, http.StatusInternalServerError)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
 			app.ErrorLog.Println(errStr)
 			return
 		}

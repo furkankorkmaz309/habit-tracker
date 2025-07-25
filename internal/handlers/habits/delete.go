@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/furkankorkmaz309/habit-tracker/internal/app"
+	"github.com/furkankorkmaz309/habit-tracker/internal/handlers"
 	"github.com/go-chi/chi"
 )
 
@@ -15,7 +16,7 @@ func DeleteHabit(app app.App) http.HandlerFunc {
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while taking id from url : %v", err)
-			http.Error(w, "Taking ID error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Taking ID error", http.StatusInternalServerError)
 			return
 		}
 
@@ -25,20 +26,20 @@ func DeleteHabit(app app.App) http.HandlerFunc {
 		result, err := app.DB.Exec(query, id, userID)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while deleting habit : %v", err)
-			http.Error(w, "Delete error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Delete error", http.StatusInternalServerError)
 			return
 		}
 
 		rowsAffected, err := result.RowsAffected()
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while retrieving result : %v", err)
-			http.Error(w, "Retrieve error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Retrieve error", http.StatusInternalServerError)
 			return
 		}
 
 		if rowsAffected == 0 {
 			app.ErrorLog.Printf("there is no row with id : %v", id)
-			http.Error(w, "No row with that id", http.StatusNotFound)
+			handlers.ResponseError(w, "No row with that id", http.StatusNotFound)
 			return
 		}
 

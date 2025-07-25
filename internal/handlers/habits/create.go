@@ -17,7 +17,7 @@ func AddHabit(app app.App) http.HandlerFunc {
 		err := json.NewDecoder(r.Body).Decode(&habit)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while decoding input : %v", err)
-			http.Error(w, "Decode error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Decode error", http.StatusInternalServerError)
 			return
 		}
 
@@ -25,7 +25,7 @@ func AddHabit(app app.App) http.HandlerFunc {
 		fq, err := handlers.FrequencyConvert(habit.Frequency)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while converting frequency : %v", err)
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			handlers.ResponseError(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -36,14 +36,14 @@ func AddHabit(app app.App) http.HandlerFunc {
 		result, err := app.DB.Exec(query, habit.Title, habit.Description, fq, habit.CreatedAt, habit.UserID)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while inserting habit to database : %v", err)
-			http.Error(w, "DB insert error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "DB insert error", http.StatusInternalServerError)
 			return
 		}
 
 		id64, err := result.LastInsertId()
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while retrieve ID : %v", err)
-			http.Error(w, "ID retrieve error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "ID retrieve error", http.StatusInternalServerError)
 			return
 		}
 		habit.ID = int(id64)
@@ -52,7 +52,7 @@ func AddHabit(app app.App) http.HandlerFunc {
 		err = handlers.ResponseSuccess(w, habit, "Habit added successfully!", http.StatusCreated)
 		if err != nil {
 			app.ErrorLog.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			handlers.ResponseError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}

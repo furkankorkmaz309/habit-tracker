@@ -13,6 +13,8 @@ import (
 func Routes(app *app.App) http.Handler {
 	r := chi.NewRouter()
 
+	r.Use(middlewares.CORS)
+
 	r.Route("/habits", func(r chi.Router) {
 		r.Use(middlewares.Auth(*app))
 

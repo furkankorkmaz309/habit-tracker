@@ -21,7 +21,7 @@ func GetHabits(app app.App) http.HandlerFunc {
 		rows, err := app.DB.Query(query, userId)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while taking habits from database : %v", err)
-			http.Error(w, "Database Error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Database Error", http.StatusInternalServerError)
 			return
 		}
 
@@ -31,7 +31,7 @@ func GetHabits(app app.App) http.HandlerFunc {
 			err = rows.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt, &habit.UserID)
 			if err != nil {
 				app.ErrorLog.Printf("an error occurred while scanning row : %v", err)
-				http.Error(w, "Row scan error", http.StatusInternalServerError)
+				handlers.ResponseError(w, "Row scan error", http.StatusInternalServerError)
 				return
 			}
 
@@ -42,7 +42,7 @@ func GetHabits(app app.App) http.HandlerFunc {
 		err = handlers.ResponseSuccess(w, habits, "Habits listed successfully!", http.StatusOK)
 		if err != nil {
 			app.ErrorLog.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			handlers.ResponseError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}
@@ -55,7 +55,7 @@ func GetHabit(app app.App) http.HandlerFunc {
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while taking id from url : %v", err)
-			http.Error(w, "Taking ID error", http.StatusInternalServerError)
+			handlers.ResponseError(w, "Taking ID error", http.StatusInternalServerError)
 			return
 		}
 
@@ -67,7 +67,7 @@ func GetHabit(app app.App) http.HandlerFunc {
 		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt)
 		if err != nil {
 			app.ErrorLog.Printf("There is no row : %v", err)
-			http.Error(w, "There is no row", http.StatusInternalServerError)
+			handlers.ResponseError(w, "There is no row", http.StatusInternalServerError)
 			return
 		}
 
@@ -75,7 +75,7 @@ func GetHabit(app app.App) http.HandlerFunc {
 		err = handlers.ResponseSuccess(w, habit, "Habit listed successfully!", http.StatusOK)
 		if err != nil {
 			app.ErrorLog.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			handlers.ResponseError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}

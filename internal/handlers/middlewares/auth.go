@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/furkankorkmaz309/habit-tracker/internal/app"
+	"github.com/furkankorkmaz309/habit-tracker/internal/handlers"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -15,12 +16,12 @@ func Auth(app app.App) func(http.Handler) http.Handler {
 			cookie, err := r.Cookie("token")
 			if err == http.ErrNoCookie {
 				app.ErrorLog.Printf("there is no cookie : %v", err)
-				http.Error(w, "there is no cookie", http.StatusInternalServerError)
+				handlers.ResponseError(w, "there is no cookie", http.StatusInternalServerError)
 				return
 			}
 			if err != nil {
 				app.ErrorLog.Printf("an error occurred while reading cookie : %v", err)
-				http.Error(w, "cookie error", http.StatusInternalServerError)
+				handlers.ResponseError(w, "cookie error", http.StatusInternalServerError)
 				return
 			}
 
@@ -30,12 +31,12 @@ func Auth(app app.App) func(http.Handler) http.Handler {
 			})
 			if err != nil {
 				app.ErrorLog.Printf("an error occurred while parsing jwt : %v", err)
-				http.Error(w, "JWT parsing error", http.StatusInternalServerError)
+				handlers.ResponseError(w, "JWT parsing error", http.StatusInternalServerError)
 				return
 			}
 			if !token.Valid {
 				app.ErrorLog.Printf("token is not valid")
-				http.Error(w, "Invalid token error", http.StatusUnauthorized)
+				handlers.ResponseError(w, "Invalid token error", http.StatusUnauthorized)
 				return
 			}
 
@@ -43,7 +44,7 @@ func Auth(app app.App) func(http.Handler) http.Handler {
 			userIdFloat, ok := claims["userId"].(float64)
 			if !ok {
 				app.ErrorLog.Printf("Unauthorized")
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				handlers.ResponseError(w, "Unauthorized", http.StatusUnauthorized)
 				return
 			}
 			userId := int(userIdFloat)
@@ -51,7 +52,7 @@ func Auth(app app.App) func(http.Handler) http.Handler {
 			username, ok := claims["username"].(string)
 			if !ok {
 				app.ErrorLog.Printf("Unauthorized")
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				handlers.ResponseError(w, "Unauthorized", http.StatusUnauthorized)
 				return
 			}
 
