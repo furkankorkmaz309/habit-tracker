@@ -51,7 +51,7 @@ func InitDB() (*sql.DB, error) {
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT NOT NULL,
 	description TEXT NOT NULL,
-	frequency INT NOT NULL,
+	frequency TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   	user_id INTEGER,
 	FOREIGN KEY (user_id) REFERENCES users(id)

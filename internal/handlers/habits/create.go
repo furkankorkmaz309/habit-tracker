@@ -21,19 +21,11 @@ func AddHabit(app app.App) http.HandlerFunc {
 			return
 		}
 
-		// check frequency
-		fq, err := handlers.FrequencyConvert(habit.Frequency)
-		if err != nil {
-			app.ErrorLog.Printf("an error occurred while converting frequency : %v", err)
-			handlers.ResponseError(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
 		// add habit to database
 		habit.CreatedAt = time.Now()
 		habit.UserID = r.Context().Value("userId").(int)
 		query := `INSERT INTO habits (title, description, frequency, created_at, user_id) VALUES (?, ?, ?, ?, ?)`
-		result, err := app.DB.Exec(query, habit.Title, habit.Description, fq, habit.CreatedAt, habit.UserID)
+		result, err := app.DB.Exec(query, habit.Title, habit.Description, habit.Frequency, habit.CreatedAt, habit.UserID)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while inserting habit to database : %v", err)
 			handlers.ResponseError(w, "DB insert error", http.StatusInternalServerError)

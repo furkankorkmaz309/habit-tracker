@@ -1,0 +1,246 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap');
+
+body{
+    min-width: 1300px;
+
+    font-family: "Special Gothic Expanded One";
+    background-color: hsl(193, 40%, 97%);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header{
+    height: 15vh;
+    width: 100%;
+    margin: 0px;
+
+    color: hsl(192, 20%, 40%);
+    background-color: hsl(193, 40%, 80%);
+    border-radius: 20px;
+    box-shadow: 3px 4px hsl(192, 20%, 80%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;  
+
+    overflow: hidden;
+}
+
+.header h1 {
+    font-size: 2.3rem;
+    text-shadow: 3px 3px hsl(193, 40%, 70%);
+}
+
+.header h5{
+    font-size: 1rem;
+    margin-top: 0px;
+}
+
+a {
+    height: 5vh;
+    width: 200px;
+
+    border: 0px solid hsl(0, 0%, 0%);
+    border-radius: 25px;
+
+    color: white;
+    background-color: hsl(192, 20%, 40%);
+    text-shadow: 2px 2px hsl(192, 20%, 25%);
+    box-shadow: 3px 4px hsl(192, 40%, 70%);
+    
+    text-decoration: none;
+    font-size: larger;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+a:hover{
+    background-color: hsl(192, 20%, 30%);
+}
+
+a:active{
+    background-color: hsl(192, 20%, 45%);
+}
+
+#today-habits{
+    position: absolute;
+    left: 30px;
+    top: 5vh;
+    width: 250px;
+}
+
+#logout{
+    position: absolute;
+    right: 30px;
+    top: 5vh;
+    width: 150px;
+}
+
+.progress-bar{
+    height: 5vh;
+    width: 93vw;
+    margin: 30px;
+
+    border: 3px solid black;
+    border-radius: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.habit{
+    height: 16vh;
+    width: 90%;
+    margin: 20px;
+    padding: 10px;
+
+    display: grid;
+    grid-template-areas:
+        "l-side   r-side";
+    grid-template-columns: 1fr auto;
+    grid-gap: 2px 5px;
+
+    color: hsl(192, 20%, 40%);
+    background-color: hsl(193, 40%, 88%);
+
+    border-radius: 20px;
+    box-shadow: 3px 4px hsl(192, 20%, 80%);
+
+    overflow: hidden;
+}
+
+.habit h1 {
+    grid-area: l-side;
+    margin: 5px;
+    font-size: 1.5rem;
+}
+
+.desc {
+    grid-area: l-side;
+    margin: 0px;
+    padding: 10px;
+    font-size: .8rem;
+}
+
+.r-side {
+    grid-area: r-side;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: end;
+    gap: 6px;
+}
+
+
+.date {
+    grid-area: r-side;
+    justify-self: flex-end;
+    align-self: start;
+
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+.history{
+    grid-area: r-side;
+    justify-self: end;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    font-size: 1.5rem;
+    
+    gap: 5px;
+}
+
+.done-bar{
+    padding: 2px 20px 2px 20px;
+
+    border: 2px solid hsl(193, 40%, 75%);
+    border-radius: 5px;
+    background-color: hsl(193, 40%, 95%);
+}
+
+.buttons {
+    grid-area: r-side;
+    justify-self: end;
+    align-items: center;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.delete-button {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+
+    background-color: hsl(0, 20%, 60%);
+    border: 2px solid black;
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.delete-button:hover{
+    background-color: hsl(0, 20%, 50%);
+}
+.delete-button:active{
+    background-color: hsl(0, 20%, 70%);
+}
+
+.edit-button {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+
+    background-color: hsl(0, 0%, 70%);
+    border: 2px solid black;
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.edit-button:hover{
+    background-color: hsl(0, 0%, 60%);
+}
+.edit-button:active{
+    background-color: hsl(0, 0%, 75%);
+}
+
+.add-new{
+    margin: 30px auto;
+}
+
+.footer {
+    width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 20px;
+}

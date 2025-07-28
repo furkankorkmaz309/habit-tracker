@@ -45,7 +45,7 @@ h1 {
     text-shadow: 2px 2px hsl(192, 20%, 25%);
     box-shadow: 3px 4px hsl(192, 20%, 80%);
     
-    font-size: 1.3rem;
+    font-size: 1.9rem;
     font-weight: bold;
 
     display: flex;
@@ -65,7 +65,7 @@ h1 {
 
 body{
     margin: 0;
-    background: url(/web/photos/pexels-tara-winstead-8850709.jpg);
+    background: url(/web/assets/images/pexels-tara-winstead-8850709.jpg);
     background-size: cover;
     background-position: right;
     overflow: hidden;
@@ -145,7 +145,7 @@ form input:hover{
 .change-sit{
     margin-top: 60px;
     font-weight: normal;
-    font-size: medium;
+    font-size: 1.3rem;
 }
 
 .change-sit-button{
@@ -167,7 +167,7 @@ form input:hover{
     justify-content: center;
     text-decoration: none;
     
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: bold;
 
     cursor: pointer;
@@ -189,8 +189,8 @@ form input:hover{
     height: 50px;
 
     border-radius: 12px;
-    background-color: hsl(192, 20%, 90%); /* Hafif zemin */
-    border: 3px solid hsl(192, 20%, 50%);  /* Dış çizgi */
+    background-color: hsl(192, 20%, 90%);
+    border: 3px solid hsl(192, 20%, 50%);
 
     display: flex;
     align-items: center;

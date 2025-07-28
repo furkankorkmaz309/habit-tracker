@@ -51,24 +51,13 @@ func PatchHabit(app app.App) http.HandlerFunc {
 			habit.Description = habitInput.Description
 		}
 
-		fq, err := strconv.Atoi(habit.Frequency)
-		if err != nil {
-			app.ErrorLog.Printf("an error occurred while converting string to integer : %v", err)
-			handlers.ResponseError(w, "Conversion error", http.StatusInternalServerError)
-			return
-		}
 		if habitInput.Frequency != "" {
-			fq, err = handlers.FrequencyConvert(habitInput.Frequency)
-			if err != nil {
-				app.ErrorLog.Printf("an error occurred while converting frequency : %v", err)
-				handlers.ResponseError(w, err.Error(), http.StatusBadRequest)
-				return
-			}
+			habit.Frequency = habitInput.Frequency
 		}
 
 		// change database
 		queryUpdate := `UPDATE habits SET title = ?, description = ?, frequency = ? WHERE id = ?`
-		_, err = app.DB.Exec(queryUpdate, habit.Title, habit.Description, fq, id)
+		_, err = app.DB.Exec(queryUpdate, habit.Title, habit.Description, habit.Frequency, id)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while updating habit : %v", err)
 			handlers.ResponseError(w, "Update error", http.StatusInternalServerError)
