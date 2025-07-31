@@ -90,8 +90,21 @@ func Login(app app.App) http.HandlerFunc {
 			Expires:  time.Now().Add(1 * time.Hour),
 		})
 
+		/*
+			http.SetCookie(w, &http.Cookie{
+				Name:     "token",
+				Value:    signedString,
+				Secure:   true,
+				HttpOnly: true,
+				Domain:   "localhost",
+				SameSite: http.SameSiteLaxMode,
+				Expires:  time.Now().Add(1 * time.Hour),
+			})
+		*/
+
 		// return status
-		err = handlers.ResponseSuccess(w, user, "User authenticated successfully!", http.StatusOK)
+		// err = handlers.ResponseSuccess(w, user, "User authenticated successfully!", http.StatusOK)
+		err = handlers.ResponseLogin(w, user, "User authenticated successfully!", signedString, http.StatusOK)
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while encoding json : %v", err)
 			handlers.ResponseError(w, errStr, http.StatusInternalServerError)

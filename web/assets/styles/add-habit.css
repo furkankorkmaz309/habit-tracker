@@ -71,6 +71,38 @@ a:active{
     background-color: hsl(192, 20%, 45%);
 }
 
+.add-button {
+    height: 5vh;
+    width: 200px;
+
+    font-family: "Special Gothic Expanded One";
+    border: 0px solid hsl(0, 0%, 0%);
+    border-radius: 25px;
+
+    color: white;
+    background-color: hsl(192, 20%, 40%);
+    text-shadow: 2px 2px hsl(192, 20%, 25%);
+    box-shadow: 3px 4px hsl(192, 40%, 70%);
+    
+    text-decoration: none;
+    font-size: larger;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.add-button:hover{
+    background-color: hsl(192, 20%, 30%);
+}
+
+.add-button:active{
+    background-color: hsl(192, 20%, 45%);
+}
+
+
 #my-habits{
     position: absolute;
     left: 30px;
@@ -84,7 +116,7 @@ a:active{
     width: 150px;
 }
 
-.new-habit {
+#new-habit {
     height: 27vh;
     width: 600px;
     padding: 10px;

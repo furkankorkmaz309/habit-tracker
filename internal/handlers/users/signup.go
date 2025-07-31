@@ -123,6 +123,24 @@ func Signup(app app.App) http.HandlerFunc {
 			return
 		}
 
+		// check is username available
+		var countemail int
+		queryEmailCheck := `SELECT COUNT(*) FROM users WHERE email = ?`
+		err = app.DB.QueryRow(queryEmailCheck, user.Email).Scan(&countemail)
+		if err != nil {
+			errStr := fmt.Sprintf("an error occurred while checking is user available : %v", err)
+			app.ErrorLog.Println(errStr)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
+			return
+		}
+
+		if countemail > 0 {
+			errStr := "Email already taken"
+			app.ErrorLog.Println(errStr)
+			handlers.ResponseError(w, errStr, http.StatusBadRequest)
+			return
+		}
+
 		// take cost from .env
 		costStr := os.Getenv("COST_NUM")
 		if costStr == "" {

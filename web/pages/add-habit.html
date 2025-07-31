@@ -11,45 +11,49 @@
         <a href="my-habits.html" id="my-habits">MY HABITS</a>
 
         <h1>HABIT TRACKER</h1>
-        <h5>usernameusernameusernameusernameusername</h5>
+        <h5 id="username-header" >usernameusernameusernameusernameusername</h5>
 
-        <a href="landing.html" id="logout">LOGOUT</a>        
+        <a id="logout">LOGOUT</a>        
     </div>
     
-    <form action="" class="new-habit">
+    <form action="" id="new-habit">
             <div class="title-desc">
-                <input type="text" name="title" class="title-desc-input" placeholder="Title">
+                <input type="text" name="title" class="title-desc-input" id="title" placeholder="Title">
 
-                <input type="text" name="description" class="title-desc-input" placeholder="Description">
+                <input type="text" name="description" class="title-desc-input" id="description" placeholder="Description">
             </div>
             
-            <div class="freq">
+            <div class="freq" id="freqs">
                 <label for="d">
-                    <input type="radio" name="freq" id="d">Daily
+                    <input type="radio" name="freq" id="d" value="D">Daily
                 </label>     
 
                 <label for="3d">
-                    <input type="radio" name="freq" id="3d">Every 3 Days
+                    <input type="radio" name="freq" id="3d" value="3D">Every 3 Days
                 </label>     
 
                 <label for="w">
-                    <input type="radio" name="freq" id="w">Weekly
+                    <input type="radio" name="freq" id="w" value="W">Weekly
                 </label>     
                 
                 <label for="2w">
-                    <input type="radio" name="freq" id="2w">Every 2 Weeks
+                    <input type="radio" name="freq" id="2w" value="2W">Every 2 Weeks
                 </label>     
                 
                 <label for="3w">
-                    <input type="radio" name="freq" id="3w">Every 3 Weeks
+                    <input type="radio" name="freq" id="3w" value="3W">Every 3 Weeks
                 </label>     
                 
                 <label for="m">
-                    <input type="radio" name="freq" id="m">Monthly
+                    <input type="radio" name="freq" id="m" value="M">Monthly
                 </label>
             </div>             
 
-            <a href="" class="add-button">Add</a>
+            <button class="add-button" >Add</button>
     </form>
+
+
+    <script src="../js/addHabit.js"></script>
+    <script src="../js/logout.js"></script>
 </body>
 </html>

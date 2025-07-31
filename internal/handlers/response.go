@@ -31,6 +31,25 @@ func ResponseSuccess(w http.ResponseWriter, T any, msg string, statusCode int) e
 
 	return nil
 }
+func ResponseLogin(w http.ResponseWriter, T any, msg, token string, statusCode int) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", " ")
+	err := encoder.Encode(Response{
+		Success: true,
+		Data:    T,
+		Message: msg,
+		Token:   token,
+	})
+
+	if err != nil {
+		return fmt.Errorf("an error occurred while responding success message : %v", err)
+	}
+
+	return nil
+}
 
 func ResponseError(w http.ResponseWriter, msg string, statusCode int) error {
 	w.Header().Set("Content-Type", "application/json")

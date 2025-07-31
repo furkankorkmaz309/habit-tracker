@@ -3,6 +3,7 @@ package habits
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/furkankorkmaz309/habit-tracker/internal/app"
@@ -18,6 +19,27 @@ func AddHabit(app app.App) http.HandlerFunc {
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while decoding input : %v", err)
 			handlers.ResponseError(w, "Decode error", http.StatusInternalServerError)
+			return
+		}
+		if strings.TrimSpace(habit.Title) == "" {
+			app.ErrorLog.Printf("Title can not blank")
+			handlers.ResponseError(w, "Title can not blank", http.StatusInternalServerError)
+			return
+		}
+		if strings.TrimSpace(habit.Description) == "" {
+			app.ErrorLog.Printf("Description can not blank")
+			handlers.ResponseError(w, "Description can not blank", http.StatusInternalServerError)
+			return
+		}
+		if strings.TrimSpace(habit.Frequency) == "" {
+			app.ErrorLog.Printf("Frequency can not blank")
+			handlers.ResponseError(w, "Frequency can not blank", http.StatusInternalServerError)
+			return
+		}
+
+		if habit.Frequency != "D" && habit.Frequency != "3D" && habit.Frequency != "W" && habit.Frequency != "2W" && habit.Frequency != "3W" && habit.Frequency != "M" {
+			app.ErrorLog.Println("Only D, 3D, W, 2W, 3W, M")
+			handlers.ResponseError(w, "Only D, 3D, W, 2W, 3W, M", http.StatusInternalServerError)
 			return
 		}
 
