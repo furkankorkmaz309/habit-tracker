@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/alexjlockwood/gcm v0.0.0-20170125155202-532ebb3946fe // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect

@@ -3,7 +3,6 @@ package users
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/furkankorkmaz309/habit-tracker/internal/app"
 	"github.com/furkankorkmaz309/habit-tracker/internal/handlers"
@@ -12,14 +11,8 @@ import (
 func Logout(app app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// set cookie
-		http.SetCookie(w, &http.Cookie{
-			Name:     "token",
-			Value:    "",
-			Secure:   true,
-			HttpOnly: true,
-			SameSite: http.SameSiteStrictMode,
-			Expires:  time.Now().Add(-1 * time.Hour),
-		})
+		http.SetCookie(w, createCookie("token", "", -1))
+		http.SetCookie(w, createCookie("uid", "", -1))
 
 		// return status
 		err := handlers.ResponseSuccess(w, "", "User logged out successfully!", http.StatusOK)

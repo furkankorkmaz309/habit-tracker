@@ -43,11 +43,24 @@ func AddHabit(app app.App) http.HandlerFunc {
 			return
 		}
 
+		if strings.TrimSpace(habit.Day) == "" && habit.Frequency != "D" {
+			app.ErrorLog.Printf("Day can not blank")
+			handlers.ResponseError(w, "Day can not blank", http.StatusInternalServerError)
+			return
+		}
+
+		if habit.Frequency != "D" && habit.Day != "monday" && habit.Day != "tuesday" && habit.Day != "wednesday" && habit.Day != "thursday" && habit.Day != "friday" && habit.Day != "saturday" && habit.Day != "sunday" {
+			errStr := `Only 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'`
+			app.ErrorLog.Println(errStr)
+			handlers.ResponseError(w, errStr, http.StatusInternalServerError)
+			return
+		}
+
 		// add habit to database
 		habit.CreatedAt = time.Now()
 		habit.UserID = r.Context().Value("userId").(int)
-		query := `INSERT INTO habits (title, description, frequency, created_at, user_id) VALUES (?, ?, ?, ?, ?)`
-		result, err := app.DB.Exec(query, habit.Title, habit.Description, habit.Frequency, habit.CreatedAt, habit.UserID)
+		query := `INSERT INTO habits (title, description, frequency, day, created_at, user_id) VALUES (?, ?, ?, ?, ?, ?)`
+		result, err := app.DB.Exec(query, habit.Title, habit.Description, habit.Frequency, habit.Day, habit.CreatedAt, habit.UserID)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while inserting habit to database : %v", err)
 			handlers.ResponseError(w, "DB insert error", http.StatusInternalServerError)

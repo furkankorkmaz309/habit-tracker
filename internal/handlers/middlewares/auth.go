@@ -2,6 +2,9 @@ package middlewares
 
 import (
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
 	"net/http"
 	"os"
 
@@ -25,8 +28,60 @@ func Auth(app app.App) func(http.Handler) http.Handler {
 				return
 			}
 
+			// hashed Token
 			tokenString := cookie.Value
-			token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(t *jwt.Token) (interface{}, error) {
+
+			// check hashed password
+			encryptedData, err := base64.URLEncoding.DecodeString(tokenString)
+			if err != nil {
+				app.ErrorLog.Printf("base64 decode error: %v", err)
+				handlers.ResponseError(w, "Invalid token format", http.StatusUnauthorized)
+				return
+			}
+			encKey := os.Getenv("ENCRYPTION_KEY")
+			if len(encKey) != 32 {
+				app.ErrorLog.Printf("ENCRYPTION_KEY must be 32 bytes, got %d", len(encKey))
+				handlers.ResponseError(w, "Invalid encryption key", http.StatusInternalServerError)
+				return
+			}
+			if encKey == "" {
+				app.ErrorLog.Printf("there is no ENCRYPTION_KEY in .env file")
+				handlers.ResponseError(w, ".env error", http.StatusInternalServerError)
+				return
+			}
+
+			c, err := aes.NewCipher([]byte(encKey))
+			if err != nil {
+				app.ErrorLog.Printf("an error occurred while generating cipher : %v", err)
+				handlers.ResponseError(w, "Cipher generate error", http.StatusUnauthorized)
+				return
+			}
+
+			gcm, err := cipher.NewGCM(c)
+			if err != nil {
+				app.ErrorLog.Printf("an error occurred while generating GCM : %v", err)
+				handlers.ResponseError(w, "GCM generate error", http.StatusUnauthorized)
+				return
+			}
+
+			nonceSize := gcm.NonceSize()
+			if len(encryptedData) < nonceSize {
+				app.ErrorLog.Printf("an error occurred while comparing hashed string : %v", err)
+				handlers.ResponseError(w, "compare error", http.StatusUnauthorized)
+				return
+			}
+
+			nonce, cipherText := encryptedData[:nonceSize], encryptedData[nonceSize:]
+			plaintext, err := gcm.Open(nil, nonce, cipherText, nil)
+			if err != nil {
+				app.ErrorLog.Printf("decryption error: %v", err)
+				handlers.ResponseError(w, "Token decryption failed", http.StatusUnauthorized)
+				return
+			}
+
+			decryptedJWT := string(plaintext)
+
+			token, err := jwt.ParseWithClaims(decryptedJWT, jwt.MapClaims{}, func(t *jwt.Token) (interface{}, error) {
 				return []byte(os.Getenv("SECRET_KEY")), nil
 			})
 			if err != nil {

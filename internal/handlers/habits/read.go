@@ -17,7 +17,7 @@ func GetHabits(app app.App) http.HandlerFunc {
 
 		// take values from db
 		userId := r.Context().Value("userId").(int)
-		query := `SELECT id, title, description, frequency, created_at, user_id FROM habits WHERE user_id = ?`
+		query := `SELECT id, title, description, frequency, day, created_at, user_id FROM habits WHERE user_id = ?`
 		rows, err := app.DB.Query(query, userId)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while taking habits from database : %v", err)
@@ -28,7 +28,7 @@ func GetHabits(app app.App) http.HandlerFunc {
 		// add to slice
 		for rows.Next() {
 			var habit models.Habit
-			err = rows.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt, &habit.UserID)
+			err = rows.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.Day, &habit.CreatedAt, &habit.UserID)
 			if err != nil {
 				app.ErrorLog.Printf("an error occurred while scanning row : %v", err)
 				handlers.ResponseError(w, "Row scan error", http.StatusInternalServerError)
@@ -62,9 +62,9 @@ func GetHabit(app app.App) http.HandlerFunc {
 		// take row from database with id
 		var habit models.Habit
 		habit.UserID = r.Context().Value("userId").(int)
-		query := `SELECT id, title, description, frequency, created_at FROM habits WHERE id = ? AND user_id = ?`
+		query := `SELECT id, title, description, frequency, day, created_at FROM habits WHERE id = ? AND user_id = ?`
 		row := app.DB.QueryRow(query, id, habit.UserID)
-		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt)
+		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.Day, &habit.CreatedAt)
 		if err != nil {
 			app.ErrorLog.Printf("There is no row : %v", err)
 			handlers.ResponseError(w, "There is no row", http.StatusInternalServerError)

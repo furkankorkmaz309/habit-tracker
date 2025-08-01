@@ -1,6 +1,10 @@
 package users
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -55,6 +59,7 @@ func Login(app app.App) http.HandlerFunc {
 			app.ErrorLog.Println(errStr)
 			return
 		}
+
 		user.ID = id
 		user.CreatedAt = createdAt
 		user.Email = email
@@ -80,31 +85,52 @@ func Login(app app.App) http.HandlerFunc {
 			return
 		}
 
+		// hash token
+		encKey := os.Getenv("ENCRYPTION_KEY")
+		if len(encKey) != 32 {
+			app.ErrorLog.Printf("ENCRYPTION_KEY must be 32 bytes, got %d", len(encKey))
+			handlers.ResponseError(w, "Invalid encryption key", http.StatusInternalServerError)
+			return
+		}
+		if encKey == "" {
+			app.ErrorLog.Printf("there is no ENCRYPTION_KEY in .env file")
+			handlers.ResponseError(w, ".env error", http.StatusInternalServerError)
+			return
+		}
+		c, err := aes.NewCipher([]byte(encKey))
+		if err != nil {
+			app.ErrorLog.Printf("an error occurred while generating cipher : %v", err)
+			handlers.ResponseError(w, "Cipher generate error", http.StatusUnauthorized)
+			return
+		}
+
+		gcm, err := cipher.NewGCM(c)
+		if err != nil {
+			app.ErrorLog.Printf("an error occurred while generating GCM : %v", err)
+			handlers.ResponseError(w, "GCM generate error", http.StatusUnauthorized)
+			return
+		}
+		nonce := make([]byte, gcm.NonceSize())
+		rand.Read(nonce)
+
+		encrypted := gcm.Seal(nonce, nonce, []byte(signedString), nil)
+		encryptedJWT := base64.URLEncoding.EncodeToString(encrypted)
+
+		nonceID := make([]byte, gcm.NonceSize())
+		rand.Read(nonceID)
+		userIDBytes := []byte(fmt.Sprintf("%d", user.ID))
+		encryptedUserID := gcm.Seal(nonceID, nonceID, userIDBytes, nil)
+		encryptedUserIDString := base64.URLEncoding.EncodeToString(encryptedUserID)
+
 		// set cookie
-		http.SetCookie(w, &http.Cookie{
-			Name:     "token",
-			Value:    signedString,
-			Secure:   true,
-			HttpOnly: true,
-			SameSite: http.SameSiteStrictMode,
-			Expires:  time.Now().Add(1 * time.Hour),
-		})
+		http.SetCookie(w, createCookie("token", encryptedJWT, 3600))
+		http.SetCookie(w, createCookie("uid", encryptedUserIDString, 3600))
 
-		/*
-			http.SetCookie(w, &http.Cookie{
-				Name:     "token",
-				Value:    signedString,
-				Secure:   true,
-				HttpOnly: true,
-				Domain:   "localhost",
-				SameSite: http.SameSiteLaxMode,
-				Expires:  time.Now().Add(1 * time.Hour),
-			})
-		*/
-
+		user.ID = 0
+		user.Password = ""
 		// return status
-		// err = handlers.ResponseSuccess(w, user, "User authenticated successfully!", http.StatusOK)
-		err = handlers.ResponseLogin(w, user, "User authenticated successfully!", signedString, http.StatusOK)
+		err = handlers.ResponseSuccess(w, user, "User authenticated successfully!", http.StatusOK)
+		// err = handlers.ResponseLogin(w, user, "User authenticated successfully!", signedString, http.StatusOK)
 		if err != nil {
 			errStr := fmt.Sprintf("an error occurred while encoding json : %v", err)
 			handlers.ResponseError(w, errStr, http.StatusInternalServerError)

@@ -13,10 +13,10 @@ form.addEventListener('submit', function(e){
 
     let errors = [];
 
-    if (username === "") {
+    if (username.replaceAll(' ', '') === "") {
         errors.push("Username cannot be blank");
     }
-    if (password === "") {
+    if (password.replaceAll(' ', '') === "") {
         errors.push("Password cannot be blank");
     }
 
@@ -43,12 +43,9 @@ form.addEventListener('submit', function(e){
             return;
         }
 
-        console.log(result)
         console.log("login succeed");
         
-        localStorage.setItem("id", result.data.id);
         localStorage.setItem("username", username);
-        localStorage.setItem("token", result.token);
         window.location.href = "dashboard.html";
     })();
 

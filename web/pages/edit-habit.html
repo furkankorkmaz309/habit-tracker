@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/web/assets/styles/add-habit.css">
     <title>Habit Tracker</title>
+    <style>
+        h3{
+            margin-top: 100px;
+            margin-bottom: 30px;
+        }
+
+        #new-habit {
+            padding: 10px;
+            margin-top: 0;
+        }
+    </style>
 </head>
 <body>    
     <div class="header">
@@ -16,6 +27,7 @@
         <a id="logout">LOGOUT</a>        
     </div>
     
+    <h3>You don't need to fill everything</h3>
     <form action="" id="new-habit">
             <div class="title-desc">
                 <input type="text" name="title" class="title-desc-input" id="title" placeholder="Title">
@@ -48,8 +60,7 @@
                 <label for="m">
                     <input type="radio" name="freq" id="m" value="M">Monthly
                 </label>
-            </div>           
-            
+            </div>      
             <div class="day" id="days">
                 <p>Day</p>
                 <label for="monday">
@@ -79,13 +90,13 @@
                 <label for="sunday">
                     <input type="radio" name="day" id="sunday" value="sunday">Sunday
                 </label>
-            </div>             
+            </div>                    
 
-            <button class="add-button" >Add</button>
+            <button type="submit" class="add-button" >Edit</button>
     </form>
 
 
-    <script src="../js/addHabit.js"></script>
+    <script src="../js/editHabit.js"></script>
     <script src="../js/logout.js"></script>
 </body>
 </html>

@@ -25,9 +25,9 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		// take row from database with id
 		var habit models.Habit
 		habit.UserID = r.Context().Value("userId").(int)
-		query := `SELECT id, title, description, frequency, created_at FROM habits WHERE id = ? AND user_id = ?`
+		query := `SELECT id, title, description, frequency, day, created_at FROM habits WHERE id = ? AND user_id = ?`
 		row := app.DB.QueryRow(query, id, habit.UserID)
-		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.CreatedAt)
+		err = row.Scan(&habit.ID, &habit.Title, &habit.Description, &habit.Frequency, &habit.Day, &habit.CreatedAt)
 		if err != nil {
 			app.ErrorLog.Printf("There is no row : %v", err)
 			handlers.ResponseError(w, "There is no row", http.StatusInternalServerError)
@@ -54,10 +54,15 @@ func PatchHabit(app app.App) http.HandlerFunc {
 		if habitInput.Frequency != "" {
 			habit.Frequency = habitInput.Frequency
 		}
+		if habitInput.Day != "" {
+			habit.Day = habitInput.Day
+		} else {
+			habit.Day = " "
+		}
 
 		// change database
-		queryUpdate := `UPDATE habits SET title = ?, description = ?, frequency = ? WHERE id = ?`
-		_, err = app.DB.Exec(queryUpdate, habit.Title, habit.Description, habit.Frequency, id)
+		queryUpdate := `UPDATE habits SET title = ?, description = ?, frequency = ?, day = ? WHERE id = ?`
+		_, err = app.DB.Exec(queryUpdate, habit.Title, habit.Description, habit.Frequency, habit.Day, id)
 		if err != nil {
 			app.ErrorLog.Printf("an error occurred while updating habit : %v", err)
 			handlers.ResponseError(w, "Update error", http.StatusInternalServerError)
